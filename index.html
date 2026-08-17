@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SURYA ESTATES — India's premier private property network founded by M Surya Teja. Curated luxury residences, penthouses, bespoke villas, and investment advisory across 36 states and union territories.">
+<title>SURYA ESTATES — India's Premier Private Property Network | Founded by M Surya Teja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<!-- Leaflet Map CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+/* ==========================================================
+   SURYA ESTATES — CORE LUXURY DESIGN SYSTEM
+========================================================== */
+:root {
+    --ink: #211914;
+    --brown: #3a2920;
+    --brown2: #594236;
+    --gold: #b38a4d;
+    --gold-light: #d7b77a;
+    --gold-subtle: rgba(179, 138, 77, 0.12);
+    --gold-glow: rgba(179, 138, 77, 0.38);
+    --cream: #f4eee4;
+    --cream2: #ebe0d0;
+    --cream-trans: rgba(244, 238, 228, 0.96);
+    --paper: #fffdf8;
+    --muted: #81766b;
+    --line: #d8cbb9;
+    --line-subtle: rgba(216, 203, 185, 0.45);
+    --shadow: 0 18px 55px rgba(40, 28, 18, 0.12);
+    --shadow-lg: 0 30px 80px rgba(33, 25, 20, 0.18);
+    --shadow-sm: 0 6px 20px rgba(40, 28, 18, 0.07);
+    --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea {
+    font: inherit;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: all 0.3s var(--ease-smooth);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+::-webkit-scrollbar-track {
+    background: var(--cream2);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gold);
+}
+
+/* Ambient Cursor Spotlight */
+.cursor-glow {
+    position: fixed;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    background: radial-gradient(circle, rgba(179, 138, 77, 0.1), transparent 70%);
+    transform: translate3d(-500px, -500px, 0);
+    margin: -160px 0 0 -160px;
+    transition: opacity 0.4s ease;
+}
+
+.kicker {
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.eyebrow {
+    color: var(--gold-light);
+    letter-spacing: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.eyebrow::before {
+    content: "";
+    width: 30px;
+    height: 1px;
+    background: var(--gold-light);
+}
+
+/* Buttons */
+.primary-btn {
+    background: var(--brown);
+    color: var(--paper);
+    border: 1px solid var(--brown);
+    padding: 13px 24px;
+    font-size: 11px;
+    letter-spacing: 1.2px;
+    font-weight: 600;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    z-index: 1;
+    transition: all 0.35s var(--ease-expo);
+}
+
+.primary-btn:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--gold-glow);
+}
+
+.outline-btn {
+    background: transparent;
+    border: 1px solid var(--brown);
+    color: var(--brown);
+    padding: 13px 22px;
+    font-size: 11px;
+    letter-spacing: 1.2px;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.35s var(--ease-smooth);
+}
+
+.outline-btn:hover {
+    background: var(--brown);
+    color: var(--paper);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.icon-btn {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--brown);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.icon-btn:hover {
+    background: var(--brown);
+    color: var(--paper);
+    border-color: var(--brown);
+    transform: translateY(-2px);
+}
+
+.badge-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--gold);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--paper);
+}
+
+/* ==========================================================
+   NAVIGATION & FIXED HEADER
+========================================================== */
+.surya-top-fixed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 5000;
+    background: var(--ink);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.top {
+    color: #ddd0c0;
+    height: 38px;
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.top-highlight {
+    color: var(--gold-light);
+    font-weight: 600;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.top-phone a {
+    color: #ddd0c0;
+}
+.top-phone a:hover {
+    color: var(--gold-light);
+}
+
+.surya-nav-fixed {
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    top: 38px;
+    z-index: 5001;
+    height: 84px;
+    padding: 0 5%;
+    background: var(--cream-trans);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+}
+
+.nav {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    font-size: 26px;
+    line-height: 0.85;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.brand small {
+    display: block;
+    text-align: center;
+    font-family: var(--font-sans);
+    color: var(--gold);
+    font-size: 7px;
+    letter-spacing: 5.5px;
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.3vw, 22px);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.nav-links a {
+    position: relative;
+    padding: 6px 0;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--gold);
+    transition: width 0.35s var(--ease-expo);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active-nav::after {
+    width: 100%;
+}
+
+.nav-links a.active-nav {
+    color: var(--brown);
+    font-weight: 700;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-btn {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.menu-btn span {
+    display: block;
+    width: 20px;
+    height: 1.5px;
+    background: var(--ink);
+}
+
+/* Category Drawer */
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 14, 11, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9997;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.menu-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.category-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(440px, 92vw);
+    height: 100vh;
+    background: var(--cream);
+    z-index: 9998;
+    transform: translateX(105%);
+    transition: transform 0.5s var(--ease-expo);
+    padding: 40px 32px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    box-shadow: -25px 0 80px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+}
+
+.category-drawer.open {
+    transform: translateX(0);
+}
+
+.drawer-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 24px;
+    margin-bottom: 10px;
+}
+
+.drawer-head h3 {
+    font-family: var(--font-serif);
+    font-size: 42px;
+    font-weight: 500;
+}
+
+.drawer-close {
+    width: 38px;
+    height: 38px;
+    font-size: 24px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.drawer-categories button {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 36px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    text-align: left;
+    padding: 15px 8px;
+    border-bottom: 1px solid var(--line-subtle);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-smooth);
+}
+
+.drawer-categories button:hover {
+    padding-left: 16px;
+    background: var(--paper);
+    border-color: var(--gold);
+}
+
+.drawer-categories span {
+    font-size: 9px;
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.drawer-categories b {
+    font-size: 12px;
+    color: var(--ink);
+}
+
+.drawer-categories small {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+}
+
+.drawer-footer {
+    margin-top: auto;
+    padding-top: 30px;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+/* ==========================================================
+   PAGE APPLICATION SYSTEM
+========================================================== */
+#surya-app {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.surya-page {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-top: 122px;
+    box-sizing: border-box;
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s var(--ease-expo);
+    scroll-behavior: smooth;
+}
+
+.surya-page.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.home-category-nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 56px;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    scrollbar-width: none;
+    background: rgba(245, 242, 235, 0.95);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.home-category-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.home-category-nav button {
+    flex: 0 0 auto;
+    padding: 16px 22px;
+    border: 0;
+    border-right: 1px solid var(--line);
+    background: transparent;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--ink);
+}
+
+.home-category-nav button:hover,
+.home-category-nav button.active-cat {
+    background: var(--brown);
+    color: var(--paper);
+}
+
+.section {
+    padding: 85px 5%;
+}
+
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    margin-bottom: 45px;
+}
+
+.section h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(42px, 5vw, 65px);
+    font-weight: 500;
+    line-height: 0.92;
+    margin-top: 10px;
+    color: var(--ink);
+}
+
+.hero {
+    min-height: 720px;
+    padding: 70px 5%;
+    display: grid;
+    grid-template-columns: minmax(0, 1.18fr) minmax(360px, 0.72fr);
+    gap: 50px;
+    align-items: center;
+    background:
+        linear-gradient(90deg, rgba(20, 14, 11, 0.94) 0%, rgba(20, 14, 11, 0.75) 55%, rgba(20, 14, 11, 0.35) 100%),
+        url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2200&q=90") center/cover;
+    color: white;
+}
+
+.hero h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(52px, 6.8vw, 105px);
+    line-height: 0.85;
+    font-weight: 500;
+}
+
+.hero h1 em {
+    color: var(--gold-light);
+    font-style: italic;
+}
+
+.hero-description {
+    max-width: 650px;
+    line-height: 1.85;
+    margin-top: 24px;
+    color: #e5dbce;
+    font-size: 13px;
+}
+
+.search-panel {
+    margin-top: 36px;
+    background: rgba(255, 253, 248, 0.98);
+    color: var(--ink);
+    padding: 12px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--line);
+}
+
+.search-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 6px;
+}
+
+.search-tabs button {
+    border: 0;
+    background: none;
+    padding: 12px 24px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.search-tabs button.active {
+    color: var(--brown);
+    border-bottom: 2px solid var(--gold);
+}
+
+.search-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1.1fr 1fr 0.9fr 1.2fr auto;
+    align-items: stretch;
+}
+
+.search-field {
+    padding: 10px 14px;
+    border-right: 1px solid var(--line);
+}
+
+.search-field label {
+    display: block;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.search-field select,
+.search-field input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--ink);
+    font-size: 12px;
+}
+
+.search-submit {
+    border: 0;
+    background: var(--gold);
+    color: white;
+    padding: 0 26px;
+    font-weight: 600;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.search-submit:hover {
+    background: var(--brown);
+}
+
+/* ==========================================================
+   ABOUT / FOUNDER SECTION (M SURYA TEJA)
+========================================================== */
+.about-founder-card {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 50px;
+    align-items: center;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 45px;
+    box-shadow: var(--shadow);
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-founder-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: var(--gold);
+}
+
+.founder-photo-wrap {
+    position: relative;
+    width: 100%;
+    height: 440px;
+    overflow: hidden;
+    border: 2px solid var(--gold);
+    box-shadow: var(--shadow-lg);
+    background: var(--brown);
+}
+
+.founder-photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    transition: transform 0.8s var(--ease-expo);
+}
+
+.founder-photo-wrap:hover img {
+    transform: scale(1.04);
+}
+
+.founder-badge {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    background: rgba(33, 25, 20, 0.9);
+    backdrop-filter: blur(8px);
+    color: white;
+    padding: 10px 14px;
+    border-left: 3px solid var(--gold);
+}
+
+.founder-badge strong {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--gold-light);
+}
+
+.founder-badge span {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #e5dbcf;
+}
+
+.founder-info h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(38px, 4.5vw, 56px);
+    font-weight: 500;
+    line-height: 0.95;
+    margin: 8px 0 12px;
+}
+
+.founder-title-pill {
+    display: inline-block;
+    background: var(--gold-subtle);
+    border: 1px solid var(--gold-light);
+    color: var(--brown);
+    padding: 6px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.founder-bio {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.9;
+    margin-bottom: 25px;
+}
+
+.founder-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 20px 0;
+    margin-bottom: 28px;
+}
+
+.founder-metric-item strong {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 28px;
+    color: var(--brown);
+    line-height: 1;
+}
+
+.founder-metric-item span {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+}
+
+.founder-direct-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Concept Slider */
+.concept-slider-wrap {
+    padding: 85px 5%;
+    background: var(--cream2);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.ba-container {
+    position: relative;
+    max-width: 1100px;
+    height: 480px;
+    margin: 30px auto 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-lg);
+    user-select: none;
+}
+
+.ba-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ba-overlay {
+    position: absolute;
+    inset: 0;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    border-right: 2px solid var(--gold-light);
+}
+
+.ba-overlay img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1100px;
+    height: 480px;
+    max-width: none;
+    object-fit: cover;
+}
+
+.ba-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--gold);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: ew-resize;
+    z-index: 10;
+}
+
+/* Grid & Cards */
+.property-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+}
+
+.property {
+    border: 1px solid var(--line);
+    background: white;
+    overflow: hidden;
+    transition: all 0.45s var(--ease-expo);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+}
+
+.property:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow);
+    border-color: var(--gold-light);
+}
+
+.property-image {
+    height: 270px;
+    position: relative;
+    overflow: hidden;
+}
+
+.property-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.property-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.property-content h3 {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: 500;
+}
+
+.property-price {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--brown);
+}
+
+.surya-custom-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.surya-custom-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 36px;
+    box-shadow: var(--shadow-sm);
+}
+
+.surya-custom-input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--line);
+    background: #fff;
+    padding: 14px 16px;
+    margin-top: 12px;
+    outline: none;
+    font-size: 12px;
+}
+
+/* Modals */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 14, 11, 0.78);
+    backdrop-filter: blur(8px);
+    z-index: 9500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-box {
+    width: min(920px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: var(--paper);
+    position: relative;
+    border: 1px solid var(--line);
+}
+
+.modal-close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.toast {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    background: var(--ink);
+    color: white;
+    padding: 16px 24px;
+    border-left: 4px solid var(--gold);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(120px);
+    opacity: 0;
+    transition: all 0.4s var(--ease-bounce);
+    z-index: 9999;
+    font-size: 12px;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+@media (max-width: 1100px) {
+    .hero {
+        grid-template-columns: 1fr;
+    }
+    .about-founder-card {
+        grid-template-columns: 1fr;
+    }
+    .property-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 850px) {
+    .surya-nav-fixed .nav-links {
+        display: none;
+    }
+    .surya-custom-grid,
+    .property-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- Category Drawer Overlay & Aside -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<aside class="category-drawer" id="categoryDrawer" aria-label="Navigation Drawer">
+  <div class="drawer-head">
+    <div>
+      <span class="kicker">SURYA ESTATES</span>
+      <h3>Directory</h3>
+    </div>
+    <button class="drawer-close" onclick="closeMenu()" aria-label="Close Drawer">✕</button>
+  </div>
+  <div class="drawer-categories">
+    <button type="button" onclick="showPage('home')"><span>00</span><b>HOME</b><small>Main Experience</small></button>
+    <button type="button" onclick="showPage('about')"><span>01</span><b>ABOUT FOUNDER</b><small>M Surya Teja &amp; Vision</small></button>
+    <button type="button" onclick="showPage('india')"><span>02</span><b>INDIA</b><small>National Markets</small></button>
+    <button type="button" onclick="showPage('cities')"><span>03</span><b>CITIES</b><small>Locations &amp; Hubs</small></button>
+    <button type="button" onclick="showPage('properties')"><span>04</span><b>PROPERTIES</b><small>Buy • Rent • Invest</small></button>
+    <button type="button" onclick="showPage('services')"><span>05</span><b>SERVICES</b><small>Property Advisory</small></button>
+    <button type="button" onclick="showPage('tools')"><span>06</span><b>TOOLS</b><small>Calculators &amp; Planning</small></button>
+    <button type="button" onclick="showPage('location')"><span>07</span><b>LOCATION</b><small>Interactive Map</small></button>
+    <button type="button" onclick="showPage('enquiry')"><span>08</span><b>ENQUIRY</b><small>Private Desk</small></button>
+    <button type="button" onclick="showPage('contact')"><span>09</span><b>CONTACT</b><small>Get in Touch</small></button>
+  </div>
+  <div class="drawer-footer">
+    <p><strong>M SURYA TEJA</strong> — Founder Desk<br><a href="tel:+916301404095">+91 63014 04095</a><br>hello@suryaestates.com</p>
+  </div>
+</aside>
+
+<!-- Top Fixed Bar -->
+<div class="surya-top-fixed">
+  <div class="top">
+    <div>EST. 2026 &nbsp;•&nbsp; <span class="top-highlight">SURYA PRIVATE PROPERTY NETWORK</span></div>
+    <div class="top-actions">
+      <span style="color:#c4b4a3; cursor:pointer;" onclick="showPage('about')">FOUNDER: M SURYA TEJA</span>
+      <div>DIRECT: <a href="tel:+916301404095" style="color:#ddd0c0;">+91 63014 04095</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Sticky Nav -->
+<div class="surya-nav-fixed">
+  <nav class="nav">
+    <a class="brand" onclick="showPage('home'); return false;">
+      SURYA<small>ESTATES</small>
+    </a>
+    <div class="nav-links">
+      <a data-page="home" class="active-nav" onclick="showPage('home')">Home</a>
+      <a data-page="about" onclick="showPage('about')">About</a>
+      <a data-page="india" onclick="showPage('india')">India</a>
+      <a data-page="cities" onclick="showPage('cities')">Cities</a>
+      <a data-page="properties" onclick="showPage('properties')">Properties</a>
+      <a data-page="services" onclick="showPage('services')">Services</a>
+      <a data-page="tools" onclick="showPage('tools')">Tools</a>
+      <a data-page="location" onclick="showPage('location')">Location</a>
+    </div>
+    <div class="nav-actions">
+      <button class="primary-btn" onclick="openModal('contactModal')">ENQUIRE</button>
+      <button class="menu-btn" onclick="toggleMenu()" aria-label="Open directory">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</div>
+
+<div id="surya-app">
+
+  <!-- 00. PAGE: HOME -->
+  <section class="surya-page active" id="page-home">
+    <nav class="home-category-nav" aria-label="Property categories">
+      <button type="button" onclick="showPage('about')">ABOUT FOUNDER</button>
+      <button type="button" onclick="showPage('india')">INDIA</button>
+      <button type="button" onclick="showPage('cities')">CITIES</button>
+      <button type="button" onclick="showPage('properties')">PROPERTIES</button>
+      <button type="button" onclick="showPage('services')">SERVICES</button>
+      <button type="button" onclick="showPage('tools')">TOOLS</button>
+      <button type="button" onclick="showPage('location')">LOCATION</button>
+      <button type="button" onclick="showPage('enquiry')">ENQUIRY</button>
+      <button type="button" onclick="showPage('contact')">CONTACT</button>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero" id="home">
+      <div class="hero-content">
+        <div class="eyebrow">INDIA'S PRIVATE PROPERTY NETWORK</div>
+        <h1>FIND YOUR<br><em>RIGHTFUL PLACE.</em></h1>
+        <p class="hero-description">
+          Founded and led by <strong>M Surya Teja</strong>, Surya Estates connects discerning buyers, investors, and developers with India's most distinguished residential, luxury villa, and commercial real estate.
+        </p>
+
+        <!-- Search Panel -->
+        <div class="search-panel">
+          <div class="search-tabs">
+            <button class="active" onclick="setPurpose('all', this)">ALL</button>
+            <button onclick="setPurpose('buy', this)">BUY</button>
+            <button onclick="setPurpose('rent', this)">RENT</button>
+          </div>
+          <div class="search-grid">
+            <div class="search-field">
+              <label>State</label>
+              <select id="searchState"><option value="">All India</option><option>Telangana</option><option>Maharashtra</option><option>Karnataka</option></select>
+            </div>
+            <div class="search-field">
+              <label>City</label>
+              <select id="searchCity"><option value="">Any City</option><option>Hyderabad</option><option>Bengaluru</option><option>Mumbai</option></select>
+            </div>
+            <div class="search-field">
+              <label>Property</label>
+              <select id="searchType"><option value="">All Types</option><option>Apartment</option><option>Villa</option><option>Penthouse</option></select>
+            </div>
+            <div class="search-field">
+              <label>Bedrooms</label>
+              <select id="searchBeds"><option value="">Any</option><option value="3">3+ BHK</option><option value="4">4+ BHK</option></select>
+            </div>
+            <div class="search-field">
+              <label>Keyword</label>
+              <input id="searchKeyword" placeholder="Locality, project...">
+            </div>
+            <button class="search-submit" onclick="showPage('properties')">SEARCH</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- FOUNDER SPOTLIGHT SECTION (HOME) -->
+    <section class="section" style="background:var(--cream); padding-top:70px; padding-bottom:70px;">
+      <div class="section-head" style="margin-bottom:20px;">
+        <div>
+          <span class="kicker">LEADERSHIP &amp; VISION</span>
+          <h2>The Mind Behind Surya Estates</h2>
+        </div>
+        <p>Built with unwavering dedication to transparent advisory, architectural distinction, and private client trust.</p>
+      </div>
+
+      <div class="about-founder-card">
+        <div class="founder-photo-wrap">
+          <img class="founder-photo-img" src="" alt="M Surya Teja — Founder &amp; Managing Director">
+          <div class="founder-badge">
+            <strong>M SURYA TEJA</strong>
+            <span>FOUNDER &amp; MANAGING DIRECTOR</span>
+          </div>
+        </div>
+        <div class="founder-info">
+          <span class="founder-title-pill">PRINCIPAL ADVISORY DIRECTOR</span>
+          <h2>M SURYA TEJA</h2>
+          <p class="founder-bio">
+            "Real estate in India is undergoing a monumental architectural renaissance. At Surya Estates, our mandate is simple yet uncompromising: to provide discerning buyers, investors, and families with verified, high-provenance properties backed by comprehensive legal due diligence and discreet representation."
+          </p>
+          <div class="founder-metrics">
+            <div class="founder-metric-item">
+              <strong>36</strong>
+              <span>States &amp; UTs Covered</span>
+            </div>
+            <div class="founder-metric-item">
+              <strong>100%</strong>
+              <span>Verified Title Due Diligence</span>
+            </div>
+            <div class="founder-metric-item">
+              <strong>+91 63014 04095</strong>
+              <span>Direct Client Line</span>
+            </div>
+          </div>
+          <div class="founder-direct-actions">
+            <button class="primary-btn" onclick="showPage('about')">READ FULL FOUNDER PROFILE →</button>
+            <a href="tel:+916301404095" class="outline-btn">CALL SURYA TEJA DIRECTLY</a>
+            <a href="https://wa.me/916301404095?text=Hello%20Surya%20Teja,%20I%20am%20interested%20in%20a%20private%20property%20consultation" target="_blank" class="outline-btn">WHATSAPP DESK</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Before & After Interactive Concept Slider -->
+    <section class="concept-slider-wrap">
+      <div class="section-head" style="margin-bottom:20px;">
+        <div>
+          <div class="kicker">TRANSFORMATION SHOWCASE</div>
+          <h2>Bare Shell to Bespoke Luxury</h2>
+        </div>
+        <p>Drag the interactive divider to explore our architectural fit-out transformations.</p>
+      </div>
+
+      <div class="ba-container" id="baContainer">
+        <img class="ba-image" src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85" alt="Completed Luxury Interior">
+        <div class="ba-overlay" id="baOverlay">
+          <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85" alt="Bare Shell Canvas">
+        </div>
+        <div class="ba-handle" id="baHandle">↔</div>
+      </div>
+    </section>
+
+    <!-- Properties Grid Section -->
+    <section class="section properties" id="properties">
+      <div class="section-head">
+        <div>
+          <div class="kicker">LIVE PROPERTY ENGINE</div>
+          <h2>Featured Private Collection</h2>
+        </div>
+      </div>
+      <div class="property-grid" id="propertyGrid"></div>
+    </section>
+  </section>
+
+  <!-- ==================== DEDICATED ABOUT PAGE ==================== -->
+  <section class="surya-page" id="page-about">
+    <div class="section-head" style="padding:40px 5% 0;">
+      <div>
+        <span class="kicker">LEADERSHIP PROFILE</span>
+        <h2 style="font-size:56px;">About M Surya Teja</h2>
+      </div>
+      <p>Founder &amp; Managing Director of Surya Estates — Building India's foremost architectural property network.</p>
+    </div>
+
+    <section class="section" style="background:var(--cream); padding-top:20px;">
+      <div class="about-founder-card" style="margin-top:0;">
+        <div class="founder-photo-wrap" style="height:460px;">
+          <img class="founder-photo-img" src="" alt="M Surya Teja — Founder">
+          <div class="founder-badge">
+            <strong>M SURYA TEJA</strong>
+            <span>FOUNDER &amp; MANAGING DIRECTOR</span>
+          </div>
+        </div>
+        <div class="founder-info">
+          <span class="founder-title-pill">EXECUTIVE DESK</span>
+          <h2 style="font-size:48px;">M SURYA TEJA</h2>
+          <p style="color:var(--gold); font-weight:600; font-size:12px; letter-spacing:2px; margin-bottom:14px; text-transform:uppercase;">
+            Founder &amp; Principal Advisory Director — Surya Estates
+          </p>
+          <p class="founder-bio">
+            M Surya Teja established <strong>Surya Estates</strong> with a single foundational premise: that high-value real estate decisions deserve institutional rigor, uncompromising confidentiality, and an architectural appreciation for physical space.
+          </p>
+          <p class="founder-bio" style="margin-top:-10px;">
+            Under his leadership, Surya Estates has expanded into a premier pan-Indian network covering 36 States and Union Territories, orchestrating private acquisitions, luxury residential mandates, and high-yield commercial placements.
+          </p>
+
+          <div style="background:var(--cream2); padding:20px; border-left:4px solid var(--gold); margin:20px 0;">
+            <p style="font-family:var(--font-serif); font-size:18px; color:var(--brown); font-style:italic;">
+              "Our clients are not simply purchasing square footage; they are securing generational legacies, architectural masterpieces, and strategic capital footholds."
+            </p>
+            <small style="display:block; margin-top:8px; font-weight:700; color:var(--ink); letter-spacing:1px;">— M SURYA TEJA</small>
+          </div>
+
+          <div class="founder-direct-actions" style="margin-top:24px;">
+            <a href="tel:+916301404095" class="primary-btn">DIRECT CALL: +91 63014 04095</a>
+            <a href="https://wa.me/916301404095?text=Hello%20Surya%20Teja,%20I%20would%20like%20to%20discuss%20a%20property%20mandate" target="_blank" class="outline-btn">WHATSAPP DIRECT</a>
+            <button class="outline-btn" onclick="openModal('contactModal')">SCHEDULE ADVISORY MEETING</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- 01. PAGE: INDIA -->
+  <section class="surya-page" id="page-india">
+    <section class="section">
+      <div class="section-head">
+        <div><div class="kicker">NATIONAL DIRECTORY</div><h2>Explore Indian Markets</h2></div>
+      </div>
+      <div class="surya-custom-grid">
+        <div class="surya-custom-card"><h3>Telangana &amp; Andhra Pradesh</h3><p>Hyderabad Kokapet, Gachibowli, Financial District &amp; Vizag Beach Corridor.</p><button class="primary-btn" style="margin-top:14px;" onclick="showPage('properties')">VIEW LISTINGS →</button></div>
+        <div class="surya-custom-card"><h3>Maharashtra</h3><p>Mumbai Sea-Facing Suites, Bandra West, BKC &amp; Pune Koregaon Park.</p><button class="primary-btn" style="margin-top:14px;" onclick="showPage('properties')">VIEW LISTINGS →</button></div>
+        <div class="surya-custom-card"><h3>Karnataka</h3><p>Bengaluru Indiranagar, Whitefield Tech Park &amp; Lavelle Road Penthouses.</p><button class="primary-btn" style="margin-top:14px;" onclick="showPage('properties')">VIEW LISTINGS →</button></div>
+        <div class="surya-custom-card"><h3>Delhi NCR</h3><p>Golf Course Road, South Delhi Mansions &amp; Noida Expressway Estates.</p><button class="primary-btn" style="margin-top:14px;" onclick="showPage('properties')">VIEW LISTINGS →</button></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- 02. PAGE: CITIES -->
+  <section class="surya-page" id="page-cities">
+    <section class="section">
+      <div class="section-head">
+        <div><div class="kicker">KEY METROS</div><h2>Metropolitan Hubs</h2></div>
+      </div>
+      <div class="surya-custom-grid">
+        <div class="surya-custom-card"><h3>Hyderabad</h3><p>Neopolis, Jubilee Hills &amp; Kokapet Sky Villas.</p><button class="outline-btn" style="margin-top:10px;" onclick="showPage('properties')">EXPLORE HYDERABAD</button></div>
+        <div class="surya-custom-card"><h3>Bengaluru</h3><p>Indiranagar, Whitefield &amp; North Bengaluru Corridors.</p><button class="outline-btn" style="margin-top:10px;" onclick="showPage('properties')">EXPLORE BENGALURU</button></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- 03. PAGE: PROPERTIES -->
+  <section class="surya-page" id="page-properties">
+    <section class="section">
+      <div class="section-head">
+        <div><div class="kicker">VERIFIED INVENTORY</div><h2>All Properties</h2></div>
+      </div>
+      <div class="property-grid" id="propertiesList"></div>
+    </section>
+  </section>
+
+  <!-- 04. PAGE: SERVICES -->
+  <section class="surya-page" id="page-services">
+    <section class="section">
+      <div class="section-head">
+        <div><div class="kicker">ADVISORY SERVICES</div><h2>What We Offer</h2></div>
+      </div>
+      <div class="surya-custom-grid">
+        <div class="surya-custom-card"><h3>Residential Acquisitions</h3><p>Bespoke luxury penthouses and villa advisory.</p></div>
+        <div class="surya-custom-card"><h3>Commercial Mandates</h3><p>Grade-A office suites and high-yield asset structuring.</p></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- 05. PAGE: TOOLS -->
+  <section class="surya-page" id="page-tools">
+    <section class="section">
+      <div class="section-head">
+        <div><div class="kicker">FINANCIAL SUITE</div><h2>Calculators</h2></div>
+      </div>
+      <div class="surya-custom-grid">
+        <div class="surya-custom-card">
+          <h3>Home Loan EMI</h3>
+          <input class="surya-custom-input" id="loanVal" type="number" value="10000000" placeholder="Loan Amount (₹)" oninput="calcEmi()">
+          <input class="surya-custom-input" id="rateVal" type="number" value="8.5" placeholder="Interest Rate (%)" oninput="calcEmi()">
+          <div style="margin-top:16px; background:var(--cream2); padding:16px; border-left:4px solid var(--gold);">
+            <span style="font-size:10px; color:var(--muted);">ESTIMATED PAYMENT</span>
+            <strong id="emiResult" style="display:block; font-size:24px; color:var(--brown); font-family:var(--font-serif);">₹ 86,782 / month</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- 06. PAGE: LOCATION -->
+  <section class="surya-page" id="page-location">
+    <section class="section">
+      <div class="section-head">
+        <div><div class="kicker">SPATIAL RADAR</div><h2>Interactive Property Map</h2></div>
+      </div>
+      <div id="leafletMapContainer" style="width:100%; height:460px; border:1px solid var(--line);"></div>
+    </section>
+  </section>
+
+  <!-- 07. PAGE: ENQUIRY -->
+  <section class="surya-page" id="page-enquiry">
+    <div class="section" style="max-width:800px; margin:0 auto;">
+      <div class="surya-custom-card">
+        <h3>Submit Property Brief</h3>
+        <p>Direct consultation desk with M Surya Teja.</p>
+        <input class="surya-custom-input" id="enqName" placeholder="Your Name *">
+        <input class="surya-custom-input" id="enqPhone" placeholder="Mobile Number *">
+        <input class="surya-custom-input" id="enqReq" placeholder="Requirement (e.g. Kokapet Villa)">
+        <button class="primary-btn" style="margin-top:18px; width:100%;" onclick="submitEnquiry()">SUBMIT BRIEF →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08. PAGE: CONTACT -->
+  <section class="surya-page" id="page-contact">
+    <div class="section" style="max-width:800px; margin:0 auto;">
+      <div class="surya-custom-card">
+        <h3>Direct Contact</h3>
+        <p><strong>M Surya Teja</strong> — Managing Director</p>
+        <p style="margin-top:8px;">Telephone: <a href="tel:+916301404095" style="color:var(--brown); font-weight:700;">+91 63014 04095</a></p>
+        <a href="https://wa.me/916301404095?text=Hello%20Surya%20Teja" target="_blank" class="primary-btn" style="margin-top:18px;">CHAT ON WHATSAPP →</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Contact Modal -->
+<div class="modal" id="contactModal" role="dialog" aria-modal="true">
+  <div class="modal-box" style="max-width:540px; padding:40px;">
+    <button class="modal-close" onclick="closeModal('contactModal')">✕</button>
+    <div class="kicker">FOUNDER PRIVATE DESK</div>
+    <h2 style="font-family:var(--font-serif); font-size:38px; margin-top:6px;">Consult M Surya Teja</h2>
+    <input class="surya-custom-input" id="contactName" placeholder="Your Full Name *">
+    <input class="surya-custom-input" id="contactPhone" placeholder="Mobile Number *">
+    <button class="primary-btn" style="width:100%; margin-top:16px;" onclick="closeModal('contactModal'); showToast('Thank you. M Surya Teja will connect with you.');">REQUEST CALLBACK →</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span style="color:var(--gold);">✦</span> <span id="toastMessage">Notification</span></div>
+
+<!-- Leaflet Map JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+/* ==========================================================
+   SELF-CONTAINED FOUNDER PHOTO (M SURYA TEJA)
+========================================================== */
+const SURYA_PHOTO = "data:image/jpeg;base64,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aJQWUSK2oWlKImpETVbxMFZrolZiV6/tfg/vICAAAAAAAMVS7hAAAAAABBAOb4r6/wCRqkxNNMtCaWqlrVsKXqkolYiYImtlvrS1zNbUIiE1Wa2ACYRW1DSYkitqkRMLaEC+d0rIt/uPhvs47BAAAAAAAHOsXUIAAAAAAraoB5Xy/wBJ81URatka5aE1mCbVktAlbVssRMFZF10w6LnC8xFImVztEgAERFiyJIrMKiYJpfMvMCYkT9f8j9RHroRIAAABBICBkguwQAAAACJgIADwPn/a8WppdVL0ulq2qTMSJglb0sqJggF+rl6dZjOYitbUWtq2lATAzvSxYhYIJAz0zS8WKBP0fzXvx9EIlEgAACAAA51C9aJQAAAAQEAAD5Ty+7hpMKrelktALVsRKEi0FmJghMLfo5um4UpNlNaTnWUxKxIImpFoFomgRImJK53hb3zsRCC3s+R6MfXCAEwJRIiYAAAOdUvRMEsiQAABEwQAAVPiua9KTW9mdq2LAWrYRMCJqt4mqTAs9HNozetVWiaSxMFkDPTJNImBWakXzsWC0RJpSaka10I7OPY+5GREgAAAAAHIF6Qi1bAABAmJggAEZa8p8ZWY0iYImslpgL0sTE1JrNS5CgNM5ZvFq22z0zgFSJGV5AIIJqLITO1LrZaRKCL53PvLY7ZRMSAAAAAAcwXcIBZEgggkIAAFeDv8s+Wg0RaqQmC01sL0sTEkrEllEkTFitolL10grnpm1IRMClq2BAIVASQZzA3mslompFq2Ps+vz+/BatgKAAARMExMHKku8xKASgTEwJgAAImo8b2fAPAQ0siBWYS0xKr0uTAkJFbUuRMSJibLTetlufTPOrILKISsxISIiYWYgTE1M5i5e0XRSaqvEn1PqeP7GEzE0AAAAAiRypLrYQAAAAACIB84HhjS0CVqFws2EkAFLACTYrWCSMRZgWaBYLARAsBEC53DWwzSBq4PovbMJkoAAAABAYBf/8QAAv/aAAwDAQACAAMAAAAh8888888888888888888888888888888888888888O8888888888888888888888888888888888888888y8888888888888888884088888888888888888888C888888888888888848quKuc88888888888888888z88888888888888884AG04kUc8888888888888888P8888888888888888+iggMAQw8888888888888888D8888888888888888oYuYUcssw888888888888888/888888888888888u/2IIs4w0a888888888888888M8888888888888886mMezS2GSy088888888888888B888888888888888a0k3fNWueG888888888888888+8888888888888880yScOrm1a4W88888888888888C88888888888888sQejnkrkFIq288888888888888B888888888888888AahOZo+Klu8888888888888888888888888888888ITwuASlfEO0888888888888889888888888888888AcYlob6SLG888888888888888B88888888888888889jUPeZz8S888888888888888N888888888888888oXVXGJLLbE888888888888888/wDPPPPPPPPPPPPPPPIJtsxLjBzPPPPPPPPPPPPPPPP/ADzzzzzzzzzzzzzy7fNEl1hT9PzzzzzzzzzzzzzzwLzzzzzzzzzzzzzzzySf85/2WpnzzzzzzzzzzzzzzzLzzzzzzzzzzzzzzzxKs26d3vC7zzzzzzzzzzzzzzzLzzzzzzzzzzzzzzzwz+msrSoz7zzzzzzzzzzzzzzz7zzzzzzzzzzzzzzyITGWdv8AUI2888888888888888w888888888888888AAK85rmDT+888888888888888w++888888888888iCAXH+W7N5e888888888888888w8888888888888ACCCbZM8Ydxy888888888888888O8+++88888888yAAbr1eBBTBOf2+8888888888888O88++88+8888oCCS9s2F9hUVr8T8+888888888888w08+88+88884gAbY8oK7RFRqdcF5z888888888888x888+88+++yiVtwpYQgWbDcq1w8s8I08888888888/k8888++4wAE89o4McRexKox40p0JIl0888888+82PQwQ8888oAEmFEk4MoB8dKKVFps915YM888888888zAAQQYQQgAWENJJxIoZhmWEclA1Q559u288++8888+AAAAAAAAAWUB9pdoEFV2Dl5RA5RcAFse888++888OAAAAAAAAASc81gZMUXaxkvBEBpBcc8Ie88888888CAAAAAAAAAcZMMwIZ8qJ+ahsgcQ94AcIc88888884OAAAAAAAAIocM0gEwUhbblgwAUREkQZg48888888oOAAAAAAAAAaksdgRBBYcFoYwRtJh4MJ0S08888888CAAAAAAAUAmJlclJEB0oj5h1NYJYk884mA0888844OAAAAAAsIAS4xVRlsBZhCUpVJ8EkARcguAU888IwAOAAAAAE4AAKUBM4lBBkWJEZhBFFFpgkgeAAgwwAAACUIAAAUoAA659V4FUEcvYisAUU5kgEAgkAIAAAAAA/AoAAIQIAmQ1JBlVMssjgY8hY51MlMQ8UKoAAAAAANAUAE4oAA6QV9JERoB537o9N9tEIsQoAwyoAAAAUQxgAMcsAAUqMMZ4oZgppQYeMBVpcIgwxIgeoAAAAAABgAAAAAAc+8B8A99A89gjf8AffAXAQAIYIIoAAAAAHAf/8QAAv/aAAwDAQACAAMAAAAQ8888888888888888888888888888888888888888/wDPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPM/PPPPPPPPPPPPPPPPPPPOPPPPPPPPPPPPPPPPPPPMfPPPPPPPPPPPPPPPPMMlHKvPPPPPPPPPPPPPPPPPA9PPPPPPPPPPPPPPPKMJPIKBGPPPPPPPPPPPPPPPOPVPPPPPPPPPPPPPPPPtlvDNEPNPPPPPPPPPPPPPPPPlPPPPPPPPPPPPPPOLmVQPIAAGPPPPPPPPPPPPPPODlPPPPPPPPPPPPPPPstcOOJPAOvPPPPPPPPPPPPPKPlPPPPPPPPPPPPPPPDlJ7DSpuNFPPPPPPPPPPPPPKAPPPPPPPPPPPPPPPAzqPJpOH3BNPPPPPPPPPPPPPPMvPPPPPPPPPPPPPOCCDcFJgnBM3vPPPPPPPPPPPPPAfPPPPPPPPPPPPPKPoNgQ6Qhh/dvPPPPPPPPPPPPPM/PPPPPPPPPPPPPPHp2eGKqPpJ1PPPPPPPPPPPPPPAvPPPPPPPPPPPPPPIoT8mtGRADdPPPPPPPPPPPPPPD/ADzzzzzzzzzzzzzxcJnOZumS9XzzzzzzzzzzzzzzwLzzzzzzzzzzzzzzywwDik7NLdVTzzzzzzzzzzzzzzPzzzzzzzzzzzzzzy5IOCoOc3GLzzzzzzzzzzzzzzz7zzzzzzzzzzzzzzy4bqtlxwkY3zzzzzzzzzzzzzzwLTzzzzzzzzzzzzzyqGG+gpdOFTzzzzzzzzzzzzzzzNTzzzzzzzzzzzzzzwgC2Wdb9hjzzzzzzzzzzzzzzw7zzzzzzzzzzzzzzzyjf58AGx9rzzzzzzzzzzzzzzz7zzzzzzzzzzzzzzyxLWq7Yi0SrzzzzzzzzzzzzzzwLzzzzzzzzzzzzzzwII3F0ihRFzzzzzzzzzzzzzzzzLzzzzzzzzzzzzzygBZM/E9/FrzzzzzzzzzzzzzzzzLj7zzzzzzzzzzyggAao/8A2RH30888888888888888A++88888888888ICE8BXiAk8vo+88888888888888z++8+88888888gCCL6c+d1v3gn088888888888888N++8+88+88882AEUNgIipHds42/wAvvPPPPPPPPPPPM/vvPPvPPvPuAlNwENM1wBAwzePUe/PPPPPPPPPPPskvvtPvvrugABxdOaOLnDJPzMUCPOGPPPPPPPPPPPPaqvvvvPCngnDIabGKJqU1JLzKCHSbLfPPPPPPPPvMEolvuuvtogvgWXQJFGaUoEkAKKcKaNEPPPPPPPPnjgggkmgogggBDDeYSHMs7LzlcFbMHQKEnvPPvvvvvgwgggggggglqAXFeNAFHmurVfQeFcEBbNvvvvvPvvgwgggggggglsNIVJGPAFKu0XKSRAbIKKPvvvvvvvvgwgggggggggHYLDLXGLB5Il0FGKfcOKDPPvvvvvvrjggggggggltrNNMVOYGYs5UzHOEWbPCSMvvvvvvvvsggggggggvjMKFCZVMQCrKNDJdYeHGMeLNvvvvvvrsgggggggkvoEXHPDWaFIoaHScXcQEPBABAvvvvotvjggggggjtvoELELONJfZw/fQZLOKAMQFKAkvvjmrqvwwggghhvvqIJObMdGaMyJrPeRZfQdNFMgksskgggv7yggggvvqsoYNJfLJCP+UHPJVIbQMGKFAigkggggjPqgghltvuIGRFJbTBPHTAfJeXZeGcFBCICAgggggg/vihvtvuuBNMYdaaNeYY2BZdObAOFLDGNCgggghgstvlogvvprDBCQOMMSaMx4rCdYYLPGATJAigggggkvvvvvvvvvoIHHPP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";
+
+/* Category Navigation Router */
+const validPages = ["home", "about", "india", "cities", "properties", "services", "tools", "location", "enquiry", "contact"];
+let activePageName = "home";
+
+window.showPage = function(name) {
+  if (!name || !validPages.includes(name)) name = "home";
+  
+  document.querySelectorAll(".surya-page").forEach(page => {
+    page.classList.remove("active");
+  });
+
+  const target = document.getElementById("page-" + name);
+  if (target) {
+    target.classList.add("active");
+    target.scrollTop = 0;
+  }
+  
+  activePageName = name;
+
+  document.querySelectorAll(".nav-links a").forEach(link => {
+    link.classList.toggle("active-nav", link.dataset.page === name);
+  });
+
+  if (name === "location") {
+    setTimeout(initLeafletMap, 300);
+  }
+
+  closeMenu();
+};
+
+/* Drawer Controls */
+function openMenu() {
+  document.getElementById("categoryDrawer").classList.add("open");
+  document.getElementById("menuOverlay").classList.add("open");
+}
+
+function closeMenu() {
+  document.getElementById("categoryDrawer").classList.remove("open");
+  document.getElementById("menuOverlay").classList.remove("open");
+}
+
+function toggleMenu() {
+  const drawer = document.getElementById("categoryDrawer");
+  if (drawer && drawer.classList.contains("open")) {
+    closeMenu();
+  } else {
+    openMenu();
+  }
+}
+
+/* Modals */
+function openModal(id) {
+  const m = document.getElementById(id);
+  if (m) m.classList.add("open");
+}
+
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (m) m.classList.remove("open");
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  const m = document.getElementById("toastMessage");
+  if (!t) return;
+  m.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3500);
+}
+
+function submitEnquiry() {
+  showToast("Property requirement sent directly to M Surya Teja.");
+}
+
+function calcEmi() {
+  const p = Number(document.getElementById("loanVal").value) || 0;
+  const r = (Number(document.getElementById("rateVal").value) || 0) / 1200;
+  const n = 240;
+  if (p <= 0 || r <= 0) return;
+  const emi = Math.round((p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
+  document.getElementById("emiResult").textContent = `₹ ${emi.toLocaleString("en-IN")} / month`;
+}
+
+function initCursorGlow() {
+  const glow = document.getElementById("cursorGlow");
+  if (!glow) return;
+  document.addEventListener("mousemove", e => {
+    glow.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+  });
+}
+
+function initBeforeAfterSlider() {
+  const container = document.getElementById("baContainer");
+  const overlay = document.getElementById("baOverlay");
+  const handle = document.getElementById("baHandle");
+  if (!container || !overlay || !handle) return;
+  let isDragging = false;
+  const onMove = (e) => {
+    if (!isDragging) return;
+    const rect = container.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    let x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    const pct = (x / rect.width) * 100;
+    overlay.style.width = pct + "%";
+    handle.style.left = pct + "%";
+  };
+  container.addEventListener("mousedown", () => isDragging = true);
+  window.addEventListener("mouseup", () => isDragging = false);
+  window.addEventListener("mousemove", onMove);
+}
+
+let leafletMap = null;
+function initLeafletMap() {
+  if (leafletMap) return;
+  const el = document.getElementById("leafletMapContainer");
+  if (!el || typeof L === "undefined") return;
+
+  leafletMap = L.map('leafletMapContainer').setView([17.3850, 78.4867], 6);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap'
+  }).addTo(leafletMap);
+
+  const metros = [
+    { name: "Hyderabad", lat: 17.3850, lng: 78.4867, desc: "Kokapet Sky Villas & Neopolis" },
+    { name: "Bengaluru", lat: 12.9716, lng: 77.5946, desc: "Indiranagar & Whitefield" },
+    { name: "Mumbai", lat: 19.0760, lng: 72.8777, desc: "Bandra West & Worli Suites" }
+  ];
+
+  metros.forEach(m => {
+    L.circleMarker([m.lat, m.lng], {
+      radius: 10,
+      fillColor: "#b38a4d",
+      color: "#3a2920",
+      weight: 2,
+      fillOpacity: 0.9
+    }).addTo(leafletMap).bindPopup(`<b>${m.name}</b><br><small>${m.desc}</small>`);
+  });
+}
+
+function renderMockProperties() {
+  const grid = document.getElementById("propertyGrid");
+  const listGrid = document.getElementById("propertiesList");
+  const items = [
+    { title: "4 BHK Kokapet Sky Villa", price: "₹ 5.80 Cr", loc: "Kokapet, Hyderabad", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" },
+    { title: "Indiranagar Signature Villa", price: "₹ 7.20 Cr", loc: "Indiranagar, Bengaluru", img: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80" },
+    { title: "Bandra Sea-Front Penthouse", price: "₹ 14.50 Cr", loc: "Bandra West, Mumbai", img: "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=800&q=80" }
+  ];
+
+  const html = items.map(p => `
+    <article class="property">
+      <div class="property-image"><img src="${p.img}" alt="${p.title}"></div>
+      <div class="property-content">
+        <h3>${p.title}</h3>
+        <div style="color:var(--muted); font-size:11px; margin:8px 0;">📍 ${p.loc}</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+          <div class="property-price">${p.price}</div>
+          <button class="primary-btn" style="padding:6px 12px; font-size:10px;" onclick="openModal('contactModal')">ENQUIRE →</button>
+        </div>
+      </div>
+    </article>
+  `).join("");
+
+  if (grid) grid.innerHTML = html;
+  if (listGrid) listGrid.innerHTML = html;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".founder-photo-img").forEach(img => {
+    img.src = SURYA_PHOTO;
+  });
+  initCursorGlow();
+  initBeforeAfterSlider();
+  renderMockProperties();
+});
+</script>
+</body>
+</html>
